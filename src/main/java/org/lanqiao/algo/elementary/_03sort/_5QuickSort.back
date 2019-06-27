@@ -1,0 +1,84 @@
+package org.lanqiao.algo.elementary._03sort;
+
+import org.lanqiao.algo.util.Util;
+
+import java.util.Arrays;
+
+/**
+ * 思路：每趟利用分区算法把小于主元的元素置于前方，把大于等于主元的元素置于后方 <br />
+ *      递归处理前方和后方的子序列<br />
+ *      ……<br />
+ * 时间复杂度：均：O(nlgn)，好：O(nlgn)，坏：O(n²)<br />
+ * 空间复杂度：每次要保存主元下标，所以是O(nlgn)？<br />
+ * 原址排序<br />
+ * 稳定性：双向扫描中，靠右的小元素会率先到达左侧……不稳定<br />
+ */
+public class _5QuickSort {
+  static void sort1(int[] arr) {
+    sort1(arr, 0, arr.length - 1);
+  }
+
+  static void sort1(int[] arr, int p, int r) {
+    if (p < r) {
+      int q = partition1(arr, p, r);
+      sort1(arr, p, q - 1);
+      sort1(arr, q + 1, r);
+    }
+  }
+
+  // 分区算法1:单向扫描
+  static int partition1(int[] arr, int p, int r) {
+    //定主元
+    int pivot = arr[p];
+    int scan_pos = p + 1;
+    int next_bigger_pos = r;
+    while (scan_pos <= next_bigger_pos) {
+      if (arr[scan_pos] <= pivot) {
+        scan_pos++;
+      } else {
+        Util.swap(arr, scan_pos, next_bigger_pos);
+        next_bigger_pos--;
+      }
+    }
+    Util.swap(arr, p, next_bigger_pos);
+    //System.out.println( "..." + next_bigger_pos + "..." + Arrays.toString( arr ) );
+    //返回主元在分区后的位置
+    return next_bigger_pos;
+  }
+
+  static void sort2(int[] arr) {
+    sort2(arr, 0, arr.length - 1);
+  }
+
+  static void sort2(int[] arr, int p, int r) {
+    if (p < r) {
+      int q = Util.partition2(arr, p, r);
+      sort2(arr, p, q - 1);
+      sort2(arr, q + 1, r);
+    }
+  }
+
+
+  static int[] sort3(int[] arr) {
+    return sort3(arr, 0, arr.length - 1);
+  }
+
+  static int[] sort3(int[] arr, int p, int r) {
+    int[] pos = null;
+    if (p < r) {
+      pos = Util.partition3(arr, p, r, arr[p]);
+      sort3(arr, p, pos[0] - 1);
+      sort3(arr, pos[1] + 1, r);
+    }
+    return (pos);
+  }
+
+
+  public static void main(String[] args) {
+    int[] arr = {7, 11, 23, 8, 2, 32, 9, 22, 11, 3};// Util.getRandomArr(6,1,100);
+    // arr = new int[]{23,11,6,10,23,55};
+    System.out.println("begin..." + Arrays.toString(arr));
+    Util.print(sort3(arr));
+    System.out.println("final..." + Arrays.toString(arr));
+  }
+}
